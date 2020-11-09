@@ -15,10 +15,8 @@ router.get("/getaccount", (req, res) => {
                     status: "ok",
                     data: doc
                 }
-
                 res.status(200).json(response)
             }
-
         })
         .catch(err => {
             console.log(err);
