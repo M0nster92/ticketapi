@@ -6,7 +6,7 @@ var router = require("./routes");
 const mongoose = require("mongoose");
 var dbUrls = require('./dburls');
 
-mongoose.connect(dbUrls.localhost, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(dbUrls.localhost, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 

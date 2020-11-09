@@ -35,6 +35,24 @@ router.post('/newaccount', (req, res) => {
     }
 })
 
+router.post("/updateaccount/:id", (req, res) => {
+    var id = req.params.id;
+    console.log("Updating id for account code ", id);
+    Account.findOneAndUpdate({ "account_code": id }, req.body, { new: true }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(500).json({ error: "Account is not updated" });
+            }
+
+        })
+})
+
 function Create(obj, res) {
     var str = "ACCT";
     var firstID = "ACCT0000001";

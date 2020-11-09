@@ -34,6 +34,24 @@ router.post('/newticket', (req, res) => {
     }
 })
 
+router.post("/updateticket/:id", (req, res) => {
+    var id = req.params.id;
+    console.log("Updating ticket ", id);
+    Ticket.findOneAndUpdate({ "ticket_id": id }, req.body, { new: true }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+
+                res.status(200).json(response);
+            } else {
+                res.status(500).json({ error: "Ticket is not updated" })
+            }
+        })
+})
+
 function Create(obj, res) {
     var str = "TCKT";
     var firstID = "TCKT0000001";

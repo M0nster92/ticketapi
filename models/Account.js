@@ -14,6 +14,8 @@ const Account = mongoose.Schema({
     postal_code: String,
     account_type: String,
     full_name: String
+}, {
+    versionKey: false
 })
 
 module.exports = mongoose.model("accounts", Account);

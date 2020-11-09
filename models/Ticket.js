@@ -22,6 +22,8 @@ const Ticket = mongoose.Schema({
     closed_date: Date,
     hold_date: Date,
     notes: String
+}, {
+    versionKey: false
 })
 
 module.exports = mongoose.model('tickets', Ticket);
