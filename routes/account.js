@@ -5,6 +5,27 @@ var router = express.Router();
 var Account = require("../models/Account");
 
 
+router.get("/getaccount", (req, res) => {
+    Account.find(req.query).exec()
+        .then((doc) => {
+            if (doc.length == 0) {
+                res.status(500).json({ status: "error" })
+            } else {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+
+                res.status(200).json(response)
+            }
+
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+        })
+})
+
 router.post('/newaccount', (req, res) => {
     if (req.body.first_name) {
         Create(req.body, res);
