@@ -1,9 +1,9 @@
 var express = require("express");
 var router = express.Router();
-var Action = require("../models/Action");
+var Appointment = require("../models/Appointment");
 
-router.get("/getaction", (req, res) => {
-    Action.find(req.query).exec()
+router.get("/getappointment", (req, res) => {
+    Appointment.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
                 res.status(500).json({ status: "error" })
@@ -21,18 +21,18 @@ router.get("/getaction", (req, res) => {
         })
 })
 
-router.post("/newaction", (req, res) => {
-    if (req.body.ticket_id) {
+router.post("/newappointment", (req, res) => {
+    if (req.body) {
         Create(req.body, res);
     } else {
-        res.status(500).json({ error: "Ticket id not found" });
+        res.status(500).json({ error: "Appointment id not found" });
     }
 })
 
-router.post("/updateaction/:id", (req, res) => {
+router.post("/updateappointment/:id", (req, res) => {
     var id = req.params.id;
-    console.log("Updating action code ", id);
-    Action.findOneAndUpdate({ "action_id": id }, req.body, { new: true }).exec()
+    console.log("Updating appointment ", id);
+    Appointment.findOneAndUpdate({ "appointment_id": id }, req.body, { new: true }).exec()
         .then((doc) => {
             if (doc) {
                 var response = {
@@ -47,23 +47,23 @@ router.post("/updateaction/:id", (req, res) => {
 })
 
 function Create(obj, res) {
-    var str = "ACTN";
-    var firstID = "ACTN0000001";
-    const action = new Action(obj);
-    Action.findOne().sort({ "action_id": -1 })
+    var str = "APPT";
+    var firstID = "APPT0000001";
+    const appointment = new Appointment(obj);
+    Action.findOne().sort({ "appointment_id": -1 })
         .then((doc) => {
             if (doc) {
-                doc.action_id = doc.action_id.substring(str.length);
-                doc.action_id = parseInt(doc.action_id) + 1;
-                doc.action_id = doc.action_id.toString().padStart(7, "0");
-                doc.action_id = str + doc.action_id;
+                doc.appointment_id = doc.appointment_id.substring(str.length);
+                doc.appointment_id = parseInt(doc.appointment_id) + 1;
+                doc.appointment_id = doc.appointment_id.toString().padStart(7, "0");
+                doc.appointment_id = str + doc.appointment_id;
             } else {
                 doc = {};
-                doc.action_id = firstID;
+                doc.appointment_id = firstID;
             }
 
-            action.action_id = doc.action_id;
-            action.save()
+            appointment.appointment_id = doc.action_id;
+            appointment_id.save()
                 .then((doc) => {
                     if (doc) {
                         let response = {
@@ -77,5 +77,6 @@ function Create(obj, res) {
                 })
         })
 }
+
 
 module.exports = router;
