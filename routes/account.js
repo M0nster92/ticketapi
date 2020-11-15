@@ -9,7 +9,7 @@ router.get("/getaccount", (req, res) => {
     Account.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
-                res.status(500).json({ status: "error" })
+                res.status(200).json({ status: "ok", data: [] })
             } else {
                 var response = {
                     status: "ok",
@@ -20,7 +20,7 @@ router.get("/getaccount", (req, res) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({ error: err });
+            res.status(500).json({ error: err, data: [] });
         })
 })
 
@@ -51,6 +51,30 @@ router.post("/updateaccount/:id", (req, res) => {
         })
 })
 
+router.get("/searchaccount/:str", async function(req, res) {
+
+    var searchStr = req.params.str;
+    //let regex = new RegExp(searchStr, 'i');
+    console.log("Searching account for string " + searchStr);
+    Account.find({
+            $or: [
+                { "first_name": { "$regex": searchStr, "$options": "i" } },
+                { "last_name": { "$regex": searchStr, "$options": "i" } }
+            ]
+        }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(500).json({ error: "Account is not updated" });
+            }
+        })
+})
+
 function Create(obj, res) {
     var str = "ACCT";
     var firstID = "ACCT0000001";
@@ -66,7 +90,7 @@ function Create(obj, res) {
                 doc = {};
                 doc.account_code = firstID;
             }
-
+            account.created_time = Date.now();
             account.account_code = doc.account_code;
             account.save()
                 .then((doc) => {

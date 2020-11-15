@@ -8,12 +8,14 @@ const Account = mongoose.Schema({
     password: String,
     company_name: String,
     mobile_phone: String,
-    address: String,
+    street: String,
     city: String,
     province: String,
     postal_code: String,
     account_type: String,
-    full_name: String
+    full_name: String,
+    created_time: Date,
+    service_activation_date: Date
 }, {
     versionKey: false
 })
