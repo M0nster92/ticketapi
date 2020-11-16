@@ -24,6 +24,22 @@ router.get("/getaccount", (req, res) => {
         })
 })
 
+router.get("/getaccount/:id", (req, res) => {
+    var id = req.params.id;
+    Account.findOne({ "account_code": id }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(500).json({ error: "Account is not updated" });
+            }
+        })
+})
+
 router.post('/newaccount', (req, res) => {
     if (req.body.first_name) {
         Create(req.body, res);

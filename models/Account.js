@@ -15,7 +15,8 @@ const Account = mongoose.Schema({
     account_type: String,
     full_name: String,
     created_time: Date,
-    service_activation_date: Date
+    service_activation_date: Date,
+    status: Boolean
 }, {
     versionKey: false
 })

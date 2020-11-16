@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var Action = require("../models/Action");
 
-router.get("/getaction", (req, res) => {
+router.get("/getactions", (req, res) => {
     Action.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {

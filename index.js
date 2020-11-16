@@ -5,6 +5,10 @@ const cors = require("cors");
 var router = require("./routes");
 const mongoose = require("mongoose");
 var dbUrls = require('./dburls');
+var passport = require("passport");
+var session = require("express-session");
+const { urlencoded } = require("express");
+const MongoStore = require("connect-mongo")(session);
 
 mongoose.connect(dbUrls.localhost, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 mongoose.Promise = global.Promise;
@@ -18,11 +22,34 @@ db.once('open', () => {
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cors({
+    origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+    credentials: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+require("./passport-config");
 
-app.get("/", (req, res) => {
-    res.send("Hello");
+app.use(session({
+    name: 'usercookie',
+    resave: false,
+    saveUninitialized: false,
+    secret: 'secret',
+    cookie: {
+        maxAge: 36000,
+        httpOnly: false,
+        secure: false
+    },
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
+}))
+
+app.get("/co", (req, res) => {
+    if (req.session) {
+        res.send(req.session);
+    }
 })
+
 
 app.use("/", router);
 
