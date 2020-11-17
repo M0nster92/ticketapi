@@ -58,6 +58,7 @@ router.post('/login', function(req, res, next) {
             if (err) { console.log("error in 2nd function"); return res.status(500).json({ error: "User id is not found" }) }
             req.session.userId = user._id;
             console.log(req.session);
+
             return res.status(200).json({
                 status: "ok",
                 data: user
@@ -83,7 +84,7 @@ function Create(obj, res) {
             }
             user.password = User.hashPassword(obj.password);
             user.created_date = Date.now();
-            user.user_id = user.user_id;
+            user.user_id = doc.user_id;
             user.save()
                 .then((doc) => {
                     if (doc) {

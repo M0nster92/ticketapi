@@ -37,17 +37,30 @@ app.use(session({
     saveUninitialized: false,
     secret: 'secret',
     cookie: {
-        maxAge: 36000,
+        maxAge: 360000,
         httpOnly: false,
         secure: false
     },
     store: new MongoStore({ mongooseConnection: mongoose.connection })
 }))
 
-app.get("/co", (req, res) => {
-    if (req.session) {
-        res.send(req.session);
+app.get('/', function(req, res, next) {
+    req.session.name = "user";
+    if (req.session.views) {
+        console.log(req.session);
+        req.session.views++
+            res.setHeader('Content-Type', 'text/html')
+        res.write('<p>views: ' + req.session.views + '</p>')
+        res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
+        res.end()
+    } else {
+        req.session.views = 1
+        res.end('welcome to the session demo. refresh!')
     }
+})
+
+app.get("/check/:name", (req, res, next) => {
+    r
 })
 
 
