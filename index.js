@@ -37,7 +37,7 @@ app.use(session({
     saveUninitialized: false,
     secret: 'secret',
     cookie: {
-        maxAge: 360000,
+        maxAge: 1 * 3600 * 1000, //1 hour
         httpOnly: false,
         secure: false
     },
@@ -57,10 +57,6 @@ app.get('/', function(req, res, next) {
         req.session.views = 1
         res.end('welcome to the session demo. refresh!')
     }
-})
-
-app.get("/check/:name", (req, res, next) => {
-    r
 })
 
 

@@ -1,9 +1,11 @@
 var express = require("express");
 const mongoose = require("mongoose");
+const { session } = require("passport");
 var router = express.Router();
 var passport = require("passport");
 
 var User = require("../models/User");
+var sessionObj = {};
 
 router.get("/users", (req, res) => {
     User.find(req.query).exec()
@@ -50,22 +52,41 @@ router.post("/newuser", (req, res) => {
 
 router.post('/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
-        if (err) { console.log("error"); return res.status(500).json({ error: "User id is not found" }) }
+        if (err) { console.log("error"); return res.status(500).json({ status: "User id is not found" }) }
         if (!user) {
-            return res.status(500).json({ error: "User id is not found", info: info })
+            return res.status(500).json({ status: "User id is not found", info: info })
         }
         req.logIn(user, function(err) {
-            if (err) { console.log("error in 2nd function"); return res.status(500).json({ error: "User id is not found" }) }
-            req.session.userId = user._id;
-            console.log(req.session);
+            if (err) { console.log("error in 2nd function"); return res.status(500).json({ status: "User id is not found" }) }
+            req.session.userId = user.user_id;
+            req.session.user_name = user.user_name;
+            
+            sessionObj = {
+                user : user,
+                session : req.session
+            }
 
             return res.status(200).json({
                 status: "ok",
-                data: user
+                data : sessionObj
             });
         });
     })(req, res, next);
 });
+
+router.get("/checksession/", (req, res)=>{
+    res.send(sessionObj);
+    
+})
+
+router.post("/extend", (req, res)=>{
+    var hour = 3600000;
+    req.session.cookie.expires = new Date(Date.now()+ hour);
+    req.session.cookie.maxAge = hour;
+    req.session.user = req.body;
+    res.send(req.session);
+})
+
 
 function Create(obj, res) {
     var str = "USER";
