@@ -1,6 +1,6 @@
 var express = require("express");
 const mongoose = require("mongoose");
-var router = exoress.router();
+var router = express.router();
 var Device = require("../models/Device");
 
 router.get("/getdevice", (req, res)=>{
