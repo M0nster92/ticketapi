@@ -84,7 +84,15 @@ router.post("/extend", (req, res)=>{
     req.session.cookie.expires = new Date(Date.now()+ hour);
     req.session.cookie.maxAge = hour;
     req.session.user = req.body;
-    res.send(req.session);
+    sessionObj = {
+    	user : req.session.user,
+    	session : req.session
+    }
+    /*res.status(200).json({
+    	status:"ok",
+    	data : sessionObj
+    });*/
+    res.send(sessionObj);
 })
 
 
