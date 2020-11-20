@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var router = express.router();
 var Device = require("../models/Device");
 
-router.get("/getdevice", (req, res)=>{
+router.get("/getdevices", (req, res)=>{
 	Device.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
@@ -21,6 +21,22 @@ router.get("/getdevice", (req, res)=>{
         .catch(err => {
             console.log(err);
             res.status(500).json({ error: err });
+        })
+})
+
+router.get("/getdevice", (req, res)=>{
+    var id = req.params.id;
+    Devoce.findOne({ "device_code": id }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(500).json({ error: "Account is not updated" });
+            }
         })
 })
 
