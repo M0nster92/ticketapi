@@ -82,7 +82,7 @@ function Create(obj, res) {
                 doc.device_id = firstID;
             }
             device.created_date = Date.now();
-            device.device_id = doc.user_id;
+            device.device_id = doc.device_id;
             device.save()
                 .then((doc) => {
                     if (doc) {
