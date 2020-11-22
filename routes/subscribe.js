@@ -1,32 +1,31 @@
 var express = require("express");
 const mongoose = require("mongoose");
 var router = express.Router();
-var Device = require("../models/Device");
 
-router.get("/getdevices", (req, res) => {
-    Device.find(req.query).exec()
+const Subscribe = require("../models/subscribe");
+
+router.get("/getsubscribes", (req, res) => {
+    Subscribe.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
-                res.status(500).json({ status: "error" })
+                res.status(200).json({ status: "ok", data: [] })
             } else {
                 var response = {
                     status: "ok",
                     data: doc
                 }
-
                 res.status(200).json(response)
             }
-
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({ error: err });
+            res.status(500).json({ error: err, data: [] });
         })
 })
 
-router.get("/getdevice", (req, res) => {
+router.get("/getsubscribe/:id", (req, res) => {
     var id = req.params.id;
-    Devoce.findOne({ "device_code": id }).exec()
+    Subscribe.findOne({ "subscribe_code": id }).exec()
         .then((doc) => {
             if (doc) {
                 var response = {
@@ -35,55 +34,57 @@ router.get("/getdevice", (req, res) => {
                 }
                 res.status(200).json(response);
             } else {
-                res.status(500).json({ error: "Account is not updated" });
+                res.status(500).json({ error: "Subscribe is not updated" });
             }
         })
 })
 
-router.post("/newdevice", (req, res) => {
+router.post('/newsubscribe', (req, res) => {
     if (req.body) {
         Create(req.body, res);
     } else {
-        res.status(500).json({ status: "Device is not found" });
+        console.error("subscribe body is missing");
+        res.status(500).json({ error: "subscribe body is missing" });
     }
 })
 
-router.post("/updatedevice/:id", (req, res) => {
+router.post("/updatesubscribe/:id", (req, res) => {
     var id = req.params.id;
-    console.log("Updating ticket ", id);
-    Device.findOneAndUpdate({ "device_id": id }, req.body, { new: true }).exec()
+    console.log("Updating id for subscribe", id);
+    Subscribe.findOneAndUpdate({ "subscribe_code": id }, req.body, { new: true }).exec()
         .then((doc) => {
             if (doc) {
                 var response = {
                     status: "ok",
                     data: doc
                 }
-
                 res.status(200).json(response);
             } else {
-                res.status(500).json({ error: "Device is not updated" })
+                res.status(500).json({ error: "Subscribe is not updated" });
             }
+
         })
 })
 
+
 function Create(obj, res) {
-    var str = "DEVI";
-    var firstID = "DEVI0000001";
-    const device = new Device(obj);
-    Device.findOne().sort({ "device_id": -1 })
+    var str = "SUBS";
+    var firstID = "SUBS0000001";
+    const subscribe = new Subscribe(obj);
+    Subscribe.findOne().sort({ "subscribe_code": -1 })
         .then((doc) => {
             if (doc) {
-                doc.device_id = doc.device_id.substring(str.length);
-                doc.device_id = parseInt(doc.device_id) + 1;
-                doc.device_id = doc.device_id.toString().padStart(7, "0");
-                doc.device_id = str + doc.device_id;
+                doc.subscribe_code = doc.subscribe_code.substring(str.length);
+                doc.subscribe_code = parseInt(doc.subscribe_code) + 1;
+                doc.subscribe_code = doc.account_code.toString().padStart(7, "0");
+                doc.subscribe_code = str + doc.subscribe_code;
             } else {
                 doc = {};
-                doc.device_id = firstID;
+                doc.subscribe_code = firstID;
             }
-            device.created_date = Date.now();
-            device.device_id = doc.user_id;
-            device.save()
+            Subscribe.created_time = Date.now();
+            Subscribe.subscribe_code = doc.subscribe_code;
+            Subscribe.save()
                 .then((doc) => {
                     if (doc) {
                         let response = {
@@ -95,7 +96,9 @@ function Create(obj, res) {
                         res.status(500).json({ error: "error" });
                     }
                 })
+
         })
 }
+
 
 module.exports = router;

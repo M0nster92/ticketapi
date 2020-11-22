@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const router = express.router();
+const router = express.Router();
 const Package = require("../models/Package");
 
 router.get("/getpackages", (req, res)=>{
@@ -70,7 +70,7 @@ function Create(obj, res) {
     var str = "PACK";
     var firstID = "PACK0000001";
     const package = new Package(obj);
-    User.findOne().sort({ "package_id": -1 })
+    Package.findOne().sort({ "package_id": -1 })
         .then((doc) => {
             if (doc) {
                 doc.package_id = doc.package_id.substring(str.length);
@@ -81,9 +81,9 @@ function Create(obj, res) {
                 doc = {};
                 doc.package_id = firstID;
             }
-            device.created_date = Date.now();
-            device.package_id = doc.package_id;
-            device.save()
+            Package.created_date = Date.now();
+            Package.package_id = doc.package_id;
+            Package.device.save()
                 .then((doc) => {
                     if (doc) {
                         let response = {
