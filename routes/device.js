@@ -7,7 +7,7 @@ router.get("/getdevices", (req, res) => {
     Device.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
-                res.status(500).json({ status: "error" })
+                res.status(200).json({ status: "error" })
             } else {
                 var response = {
                     status: "ok",
@@ -20,7 +20,30 @@ router.get("/getdevices", (req, res) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({ error: err });
+            res.status(200).json({ status: "error" });
+        })
+})
+
+router.get("/searchdevice/:str", async function(req, res) {
+    var searchStr = req.params.str;
+    console.log("Searching device for string: " + searchStr);
+    Device.find({
+            $or: [
+                { "name": { "$regex": searchStr, "$options": "i" } },
+                { "model": { "$regex": searchStr, "$options": "i" } },
+                { "mac": { "$regex": searchStr, "$options": "i" } }
+            ]
+        }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(200).json({ status: "Account is not updated" });
+            }
         })
 })
 
@@ -35,7 +58,7 @@ router.get("/getdevice", (req, res) => {
                 }
                 res.status(200).json(response);
             } else {
-                res.status(500).json({ error: "Account is not updated" });
+                res.status(200).json({ status: "Account is not updated" });
             }
         })
 })
@@ -44,7 +67,7 @@ router.post("/newdevice", (req, res) => {
     if (req.body) {
         Create(req.body, res);
     } else {
-        res.status(500).json({ status: "Device is not found" });
+        res.status(200).json({ status: "Device is not found" });
     }
 })
 
@@ -61,7 +84,7 @@ router.post("/updatedevice/:id", (req, res) => {
 
                 res.status(200).json(response);
             } else {
-                res.status(500).json({ error: "Device is not updated" })
+                res.status(200).json({ status: "Device is not updated" })
             }
         })
 })
