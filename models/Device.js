@@ -5,7 +5,7 @@ const Device = mongoose.Schema({
     serial: String,
     model: String,
     mac: String,
-    created_date: String,
+    created_date: Date,
     name: String,
     type: String
 }, {
