@@ -5,7 +5,6 @@ const Package = mongoose.Schema({
     category: String,
     price: Number,
     customer_count: Number,
-    status: Boolean,
     created_date: Date,
     name: String
 })
