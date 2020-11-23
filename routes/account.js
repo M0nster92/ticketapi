@@ -86,7 +86,7 @@ router.get("/searchaccount/:str", async function(req, res) {
                 }
                 res.status(200).json(response);
             } else {
-                res.status(500).json({ error: "Account is not updated" });
+                res.status(200).json({ status: "Account is not updated" });
             }
         })
 })

@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const Package = require("../models/Package");
 
-router.get("/getpackages", (req, res)=>{
-	Package.find(req.query).exec()
+router.get("/getpackages", (req, res) => {
+    Package.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
                 res.status(500).json({ status: "error" })
@@ -24,7 +24,7 @@ router.get("/getpackages", (req, res)=>{
         })
 })
 
-router.get("/getpackage/:id",(req, res)=>{
+router.get("/getpackage/:id", (req, res) => {
     var id = req.params.id;
     Package.findOne({ "package_code": id }).exec()
         .then((doc) => {
@@ -40,17 +40,40 @@ router.get("/getpackage/:id",(req, res)=>{
         })
 })
 
-router.post("/newdevice", (req, res)=>{
-	if(req.body){
-		Create(req.body, res);
-	} else {
-		res.status(500).json({status : "package body is empty"});
-	}
+router.post("/newdevice", (req, res) => {
+    if (req.body) {
+        Create(req.body, res);
+    } else {
+        res.status(500).json({ status: "package body is empty" });
+    }
 })
 
-router.post("/updatepackage/:id", (req, res)=>{
-	var id = req.params.id;
-	console.log("Updating package ", id);
+router.get("/searchpackage/:str", async(req, res) => {
+    var searchStr = req.params.str;
+    console.log("Searching device for string: " + searchStr);
+    Package.find({
+            $or: [
+                { "name": { "$regex": searchStr, "$options": "i" } },
+                { "package_id": { "$regex": searchStr, "$options": "i" } }
+            ]
+        }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(200).json({ status: "Device is not updated" });
+            }
+        })
+
+})
+
+router.post("/updatepackage/:id", (req, res) => {
+    var id = req.params.id;
+    console.log("Updating package ", id);
     Package.findOneAndUpdate({ "package_id": id }, req.body, { new: true }).exec()
         .then((doc) => {
             if (doc) {

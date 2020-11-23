@@ -42,7 +42,7 @@ router.get("/searchdevice/:str", async function(req, res) {
                 }
                 res.status(200).json(response);
             } else {
-                res.status(200).json({ status: "Account is not updated" });
+                res.status(200).json({ status: "Device is not updated" });
             }
         })
 })
