@@ -2,11 +2,11 @@ var express = require("express");
 var router = express.Router();
 const Technician = require("../models/Technician");
 
-router.get('/gettechnician', (req, res) => {
+router.get('/gettechnicians', (req, res) => {
     Technician.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
-                res.status(500).json({ status: "error" })
+                res.status(200).json({ status: "error" })
             } else {
                 var response = {
                     status: "ok",
@@ -18,7 +18,23 @@ router.get('/gettechnician', (req, res) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({ error: err });
+            res.status(200).json({ status: err });
+        })
+})
+
+router.get("/gettechnician/:id", (req, res) => {
+    var id = req.params.id;
+    Technician.findOne({ "tech_id": id }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(200).json({ status: "Account is not updated" });
+            }
         })
 })
 
@@ -34,7 +50,7 @@ router.post("/updatetechnician/:id", (req, res) => {
                 }
                 res.status(200).json(response);
             } else {
-                res.status(500).json({ error: "Action is not updated" });
+                res.status(200).json({ status: "Action is not updated" });
             }
         })
 })
@@ -43,8 +59,31 @@ router.post('/newtechnician', (req, res) => {
     if (req.body) {
         Create(req.body, res);
     } else {
-        res.status(500).json({ error: "Tech body is missing" });
+        res.status(200).json({ status: "Tech body is missing" });
     }
+})
+
+router.get("/searchtechnician/:str", async function(req, res) {
+    var searchStr = req.params.str;
+    console.log("Searching device for string: " + searchStr);
+    Technician.find({
+            $or: [
+                { "display_name": { "$regex": searchStr, "$options": "i" } },
+                { "extension": { "$regex": searchStr, "$options": "i" } },
+                { "user": { "$regex": searchStr, "$options": "i" } }
+            ]
+        }).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(200).json({ status: "Device is not updated" });
+            }
+        })
 })
 
 function Create(obj, res) {
