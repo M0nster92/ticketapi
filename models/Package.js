@@ -1,4 +1,4 @@
-const mongoose = require("Mongoose");
+const mongoose = require("mongoose");
 
 const Package = mongoose.Schema({
     package_id: String,
@@ -7,6 +7,8 @@ const Package = mongoose.Schema({
     customer_count: Number,
     created_date: Date,
     name: String
+}, {
+	versionKey: false
 })
 
 module.exports = mongoose.model("package", Package);

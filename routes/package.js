@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const router = express.Router();
 const Package = require("../models/Package");
 
@@ -7,7 +6,7 @@ router.get("/getpackages", (req, res) => {
     Package.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
-                res.status(500).json({ status: "error" })
+                res.status(200).json({ status: "error" })
             } else {
                 var response = {
                     status: "ok",
@@ -40,7 +39,7 @@ router.get("/getpackage/:id", (req, res) => {
         })
 })
 
-router.post("/newdevice", (req, res) => {
+router.post("/newpackage", (req, res) => {
     if (req.body) {
         Create(req.body, res);
     } else {
@@ -92,6 +91,7 @@ router.post("/updatepackage/:id", (req, res) => {
 function Create(obj, res) {
     var str = "PACK";
     var firstID = "PACK0000001";
+    console.log(obj);
     const package = new Package(obj);
     Package.findOne().sort({ "package_id": -1 })
         .then((doc) => {
@@ -104,9 +104,9 @@ function Create(obj, res) {
                 doc = {};
                 doc.package_id = firstID;
             }
-            Package.created_date = Date.now();
-            Package.package_id = doc.package_id;
-            Package.device.save()
+            package.created_date = Date.now();
+            package.package_id = doc.package_id;
+            package.save()
                 .then((doc) => {
                     if (doc) {
                         let response = {
@@ -120,6 +120,7 @@ function Create(obj, res) {
                 })
         })
 }
+
 
 
 module.exports = router;

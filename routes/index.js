@@ -5,7 +5,7 @@ const account = require("./account");
 const action = require("./action");
 const technician = require("./technician");
 const user = require("./user");
-const packages = require("./package");
+const package = require("./package");
 const device = require("./device");
 const subscribe = require("./subscribe");
 
@@ -15,7 +15,7 @@ router.use("/", action);
 router.use("/", technician);
 router.use("/", user);
 router.use("/", device);
-router.use("/", packages);
+router.use("/", package);
 router.use("/", subscribe);
 
 module.exports = router;
