@@ -47,13 +47,13 @@ router.post("/newpackage", (req, res) => {
     }
 })
 
-router.get("/searchpackage/:str", async(req, res) => {
+router.get("/searchpackage/:str", async function(req, res) {
     var searchStr = req.params.str;
     console.log("Searching device for string: " + searchStr);
     Package.find({
             $or: [
-                { "name": { "$regex": searchStr, "$options": "i" } },
-                { "package_id": { "$regex": searchStr, "$options": "i" } }
+                { "category": { "$regex": searchStr, "$options": "i" } },
+                { "name": { "$regex": searchStr, "$options": "i" } }
             ]
         }).exec()
         .then((doc) => {
@@ -67,7 +67,6 @@ router.get("/searchpackage/:str", async(req, res) => {
                 res.status(200).json({ status: "Device is not updated" });
             }
         })
-
 })
 
 router.post("/updatepackage/:id", (req, res) => {
