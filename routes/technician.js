@@ -57,6 +57,7 @@ router.post("/updatetechnician/:id", (req, res) => {
 
 router.post('/newtechnician', (req, res) => {
     if (req.body) {
+        console.log(req.body);
         Create(req.body, res);
     } else {
         res.status(200).json({ status: "Tech body is missing" });
@@ -102,6 +103,7 @@ function Create(obj, res) {
                 doc.tech_id = firstID;
             }
             tech.tech_id = doc.tech_id;
+            tech.created_date = Date.now();
             tech.save()
                 .then((doc) => {
                     if (doc) {

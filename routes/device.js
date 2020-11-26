@@ -47,9 +47,9 @@ router.get("/searchdevice/:str", async function(req, res) {
         })
 })
 
-router.get("/getdevice", (req, res) => {
+router.get("/getdevice/:id", (req, res) => {
     var id = req.params.id;
-    Devoce.findOne({ "device_code": id }).exec()
+    Device.findOne({ "device_code": id }).exec()
         .then((doc) => {
             if (doc) {
                 var response = {

@@ -4,11 +4,12 @@ const Technician = mongoose.Schema({
     tech_id: String,
     user: String,
     display_name: String,
-    fieldService: String,
-    lab: String,
-    phonesupport: String,
+    fieldService: Boolean,
+    lab: Boolean,
+    phonesupport: Boolean,
     category: [],
-    extension: String
+    extension: String,
+    created_date: Date
 }, {
     versionKey: false
 })
