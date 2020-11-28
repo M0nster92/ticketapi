@@ -4,10 +4,12 @@ var router = express.Router();
 
 var Account = require("../models/Account");
 var SubscribeDevice = require("../models/Subscribe_device");
+var Device = require("../models/Device");
 
 var response = {
     status: "ok",
     data: {},
+    subscribe: {},
     devices: {}
 }
 
@@ -31,7 +33,7 @@ router.get("/getaccount", (req, res) => {
         })
 })
 
-const getDevices = async function(params) {
+const getSubscribe = async function(params) {
     try {
         return await SubscribeDevice.find({ "account_code": params })
     } catch (err) {
@@ -39,25 +41,35 @@ const getDevices = async function(params) {
     }
 }
 
-router.get("/getaccount/:id", async(req, res) => {
+const getDevices = async function(params) {
+    try {
+        return await Device.find({ "account_code": params });
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+router.get("/getaccount/:id", (req, res) => {
+    var arr = [];
     var id = req.params.id;
     Account.findOne({ "account_code": id }).populate('devices')
         .then((doc) => {
             if (doc) {
-                var device = getDevices(id).then((device) => {
-                    response.data = doc;
-                    response.devices = device
-                    console.log("Sending Account Info ", response);
-                    res.status(200).json(response);
+                response.data = doc;
+                var subscribe = getSubscribe(id).then((subscribe) => {
+                    response.subscribe = subscribe;
+                    var device = getDevices(id).then((device) => {
+                        if (device) {
+                            response.devices = device;
 
-                });
+                            res.status(200).json(response);
+                        }
+                    })
 
-                //console.log(response)
-                console.log("Outside", response)
-
-
+                })
             } else {
-                res.status(500).json({ error: "Account is not updated" });
+                res.status(500).json({ error: "Account not found" });
             }
         })
 })

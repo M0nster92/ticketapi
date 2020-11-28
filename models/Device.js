@@ -8,7 +8,8 @@ const Device = mongoose.Schema({
     created_date: Date,
     name: String,
     type: String,
-    active: Boolean
+    active: Boolean,
+    account_code: String
 }, {
     versionKey: false
 })
