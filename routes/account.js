@@ -3,6 +3,13 @@ const mongoose = require("mongoose");
 var router = express.Router();
 
 var Account = require("../models/Account");
+var SubscribeDevice = require("../models/Subscribe_device");
+
+var response = {
+    status: "ok",
+    data: {},
+    devices: {}
+}
 
 
 router.get("/getaccount", (req, res) => {
@@ -24,16 +31,31 @@ router.get("/getaccount", (req, res) => {
         })
 })
 
-router.get("/getaccount/:id", (req, res) => {
+const getDevices = async function(params) {
+    try {
+        return await SubscribeDevice.find({ "account_code": params })
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+router.get("/getaccount/:id", async(req, res) => {
     var id = req.params.id;
-    Account.findOne({ "account_code": id }).exec()
+    Account.findOne({ "account_code": id }).populate('devices')
         .then((doc) => {
             if (doc) {
-                var response = {
-                    status: "ok",
-                    data: doc
-                }
-                res.status(200).json(response);
+                var device = getDevices(id).then((device) => {
+                    response.data = doc;
+                    response.devices = device
+                    console.log("Sending Account Info ", response);
+                    res.status(200).json(response);
+
+                });
+
+                //console.log(response)
+                console.log("Outside", response)
+
+
             } else {
                 res.status(500).json({ error: "Account is not updated" });
             }

@@ -7,7 +7,8 @@ const Device = mongoose.Schema({
     mac: String,
     created_date: Date,
     name: String,
-    type: String
+    type: String,
+    active: Boolean
 }, {
     versionKey: false
 })

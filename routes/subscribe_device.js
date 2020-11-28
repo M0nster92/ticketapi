@@ -41,6 +41,7 @@ router.get("/getdevicesubscribe/:id", (req, res) => {
 
 router.post('/newdevicesubscribe', (req, res) => {
     if (req.body) {
+        console.log("New Subscribe Body", req.body);
         Create(req.body, res);
     } else {
         console.error("subscribe body is missing");
@@ -63,9 +64,9 @@ function Create(obj, res) {
                 doc = {};
                 doc.subscribe_code = firstID;
             }
-            Subscribe.created_time = Date.now();
-            Subscribe.subscribe_code = doc.subscribe_code;
-            Subscribe.save()
+            subscribe.created_time = Date.now();
+            subscribe.subscribe_code = doc.subscribe_code;
+            subscribe.save()
                 .then((doc) => {
                     if (doc) {
                         let response = {
