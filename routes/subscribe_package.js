@@ -4,7 +4,7 @@ var router = express.Router();
 
 const Subscribe = require("../models/subscribe");
 
-router.get("/getsubscribes", (req, res) => {
+router.get("/getpackagesubscribes", (req, res) => {
     Subscribe.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
@@ -23,7 +23,7 @@ router.get("/getsubscribes", (req, res) => {
         })
 })
 
-router.get("/getsubscribe/:id", (req, res) => {
+router.get("/getpackagesubscribe/:id", (req, res) => {
     var id = req.params.id;
     Subscribe.findOne({ "subscribe_code": id }).exec()
         .then((doc) => {
@@ -39,8 +39,9 @@ router.get("/getsubscribe/:id", (req, res) => {
         })
 })
 
-router.post('/newsubscribe', (req, res) => {
+router.post('/newpackagesubscribe', (req, res) => {
     if (req.body) {
+        console.log("inserting new subscribe ", req.body);
         Create(req.body, res);
     } else {
         console.error("subscribe body is missing");
@@ -48,7 +49,7 @@ router.post('/newsubscribe', (req, res) => {
     }
 })
 
-router.post("/updatesubscribe/:id", (req, res) => {
+router.post("/updatepackagesubscribe/:id", (req, res) => {
     var id = req.params.id;
     console.log("Updating id for subscribe", id);
     Subscribe.findOneAndUpdate({ "subscribe_code": id }, req.body, { new: true }).exec()
@@ -82,9 +83,9 @@ function Create(obj, res) {
                 doc = {};
                 doc.subscribe_code = firstID;
             }
-            Subscribe.created_time = Date.now();
-            Subscribe.subscribe_code = doc.subscribe_code;
-            Subscribe.save()
+            subscribe.created_time = Date.now();
+            subscribe.subscribe_code = doc.subscribe_code;
+            subscribe.save()
                 .then((doc) => {
                     if (doc) {
                         let response = {

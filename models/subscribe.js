@@ -6,7 +6,7 @@ const Subscribe = mongoose.Schema({
     package_code: String,
     account_code: String,
     price: Number,
-    status: String,
+    active: Boolean,
     created_date: Date,
     start_date: Date
 }, {

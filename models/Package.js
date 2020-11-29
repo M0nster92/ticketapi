@@ -6,7 +6,8 @@ const Package = mongoose.Schema({
     price: Number,
     customer_count: Number,
     created_date: Date,
-    name: String
+    name: String,
+    customer_count : Number
 }, {
 	versionKey: false
 })
