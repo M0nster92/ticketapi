@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const Ticket = mongoose.Schema({
     ticket_id: String,
     account_code: String,
-    account_name: String,
+    first_name: String,
+    last_name: String,
     account_request: String,
     subscribe_code: String,
     priority: Number,

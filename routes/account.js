@@ -5,12 +5,14 @@ var router = express.Router();
 var Account = require("../models/Account");
 var SubscribeDevice = require("../models/Subscribe_device");
 var Device = require("../models/Device");
+var SubscribePackage = require("../models/subscribe.js");
 
 var response = {
     status: "ok",
     data: {},
     subscribe: {},
-    devices: {}
+    devices: {},
+    packages : {}
 }
 
 
@@ -49,6 +51,14 @@ const getDevices = async function(params) {
     }
 }
 
+const getSubscribePakcages = async function(params){
+  try{
+    return await SubscribePackage.find({"account_code":params});
+  } catch(err){
+      console.log(err)
+  }
+}
+
 
 router.get("/getaccount/:id", (req, res) => {
     var arr = [];
@@ -60,11 +70,11 @@ router.get("/getaccount/:id", (req, res) => {
                 var subscribe = getSubscribe(id).then((subscribe) => {
                     response.subscribe = subscribe;
                     var device = getDevices(id).then((device) => {
-                        if (device) {
-                            response.devices = device;
-
-                            res.status(200).json(response);
-                        }
+                      response.devices = device;
+                      var subscibe_package = getSubscribePakcages(id).then((subscibe_package)=>{
+                        response.packages = subscibe_package;
+                        res.status(200).json(response);
+                      })
                     })
 
                 })
