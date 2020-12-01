@@ -22,7 +22,8 @@ const Ticket = mongoose.Schema({
     closed_user: String,
     closed_date: Date,
     hold_date: Date,
-    notes: String
+    notes: String,
+    priority: String
 }, {
     versionKey: false
 })

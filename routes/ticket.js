@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var router = express.Router();
 var Ticket = require('../models/Ticket');
 
-router.get('/getticket', (req, res) => {
+router.get('/gettickets', (req, res) => {
     Ticket.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
@@ -21,6 +21,23 @@ router.get('/getticket', (req, res) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({ error: err });
+        })
+})
+
+router.get("/getticket/:id", (req,res)=>{
+    var id = req.params.id;
+    console.log("getting data for account = ", id);
+    Ticket.find({ "account_code": id }, req.query).exec()
+        .then((doc) => {
+            if (doc) {
+                var response = {
+                    status: "ok",
+                    data: doc
+                }
+                res.status(200).json(response);
+            } else {
+                res.status(200).json({ status: "Account is not updated" });
+            }
         })
 })
 
