@@ -7,7 +7,7 @@ router.get('/gettickets', (req, res) => {
     Ticket.find(req.query).exec()
         .then((doc) => {
             if (doc.length == 0) {
-                res.status(500).json({ status: "error" })
+                res.status(200).json({ status: "error" })
             } else {
                 var response = {
                     status: "ok",
@@ -17,10 +17,6 @@ router.get('/gettickets', (req, res) => {
                 res.status(200).json(response)
             }
 
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: err });
         })
 })
 
@@ -47,7 +43,7 @@ router.post('/newticket', (req, res) => {
     if (req.body.account_code) {
         Create(req.body, res)
     } else {
-        res.status(500).json({ error: "account code is missing" });
+        res.status(200).json({ error: "account code is missing" });
     }
 })
 
@@ -64,7 +60,7 @@ router.post("/updateticket/:id", (req, res) => {
 
                 res.status(200).json(response);
             } else {
-                res.status(500).json({ error: "Ticket is not updated" })
+                res.status(200).json({ error: "Ticket is not updated" })
             }
         })
 })
