@@ -20,6 +20,43 @@ router.get('/gettickets', (req, res) => {
         })
 })
 
+router.get("/getrecenttickets", (req, res)=>{
+    var Days = 30;
+    var date = new Date(Date.now() - (Days * 24 * 60 * 60 * 1000)).toISOString();
+    console.log("Fetching all the ticket ",date);
+    var filter = {}
+    if(req.query.issue){
+        console.log("req query ", req.query);
+        filter = {
+        "created_date": {"$gte":date},
+        "issue":req.query.issue
+        }
+        console.log("Filter : ", filter); 
+    } else {
+        filter = {
+            "created_date": {"$gte":date }
+        }
+        console.log(filter);
+
+    }
+    
+        Ticket.find(filter).exec()
+        .then((doc)=>{
+        if(doc.length == 0){
+            res.status(200).json({status : "error"})
+        } else {
+            //console.log(doc);
+            var response = {
+                status : "ok",
+                data : doc
+            }
+
+            res.status(200).json(response);
+        }
+    })
+    
+})
+
 router.get("/getticket/:id", (req,res)=>{
     var id = req.params.id;
     console.log("getting data for account = ", id);
