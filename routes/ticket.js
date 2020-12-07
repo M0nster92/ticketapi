@@ -75,6 +75,23 @@ router.get("/getticket/:id", (req,res)=>{
 })
 
 
+router.get("/getselectedticket/:id", (req, res)=>{
+	var id = req.params.id;
+	console.log("Getting ticket info ", id);
+	Ticket.find({"ticket_id":id}).exec()
+	.then((doc)=>{
+		if(doc){
+			var response = {
+				status : "ok",
+				data : doc
+			}
+			res.status(200).json(response)
+		} else {
+			res.status(200).json({status : "ticket not found"});
+		}
+	})
+})
+
 router.post('/newticket', (req, res) => {
 
     if (req.body.account_code) {
